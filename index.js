@@ -28,5 +28,28 @@ inquirer
         }
     ])
     .then(answers => {
-        
+        const { text, textColor, shape, shapeColor } = answers;
+        let shapeInstance;
+
+        switch (shape) {
+            case 'Triangle':
+                shapeInstance = new Triangle(shapeColor);
+                break;
+            case 'Circle':
+                shapeInstance = new Circle(shapeColor);
+                break;
+            case 'Square':
+                shapeInstance = new Square(shapeInstance);
+                break;
+        }
+
+        const svgContent = shapeInstance.render();
+        const textElemet = `<text x="150" y="125" font-size="60" text-anchor="middle" fill="${textColor}">${text}</text>`;
+        const finalSvg = svgContent.replace('</svg>', `${textElemet}</svg>`);
+
+        fs.writeFileSync('logo.svg', finalSvg);
+        console.log('Generated logo.svg');
     })
+    .catch(error => {
+        console.error('Error:', error);
+    });
